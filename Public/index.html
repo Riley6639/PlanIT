@@ -7,39 +7,70 @@
         <link rel="stylesheet" href="style.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-        <title>Test</title>
+        <link href="https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css" rel="stylesheet">
+        <title>PlanIT</title>
+        <script src="drag.js" defer></script>
+        <script src="todo.js" defer></script>
     </head>
-    <body class="bg-amber-50 m-0 p-0">
-        <div class="flex-wrap h-screen w-screen relative">
-            <nav class="flex h-5/6 mt-7 w-1/4 fixed justify-between border-2 rounded-2xl border-black m-2">
-                <ul class="flex flex-col p-8 justify-between leading-5 h-3/4 w-full pt-6">
-                    <li class="gap-8">
-                        <a href="#" class="flex flex-row items-center">
-                            <img src="assets/Untitled design.png" class="h-16 w-16" alt="company logo">
-                            <span class="text-4xl font-bold">PlanIT</span>
-                        </a>
-                    </li>
-                    <li><a href="#"> 
-                        <span class="material-symbols-outlined scale-150 h-10 w-10">
+    <body class="bg-amber-50 m-0 box-border">
+        <div class="dashboard px-4 py-0 my-0 mx-auto h-screen border-2 border-black">
+            <nav class="navigation flex justify-evenly w-full mt-2 border-2 rounded-2xl border-black">
+                <div class="logo flex flex-row items-center w-1/4 relative right-20">
+                    <img src="assets/Untitled design.png" class="h-16 w-16 ml-2" alt="Company Logo">
+                    <span class="font-bold text-4xl"> PlanIT</span>
+                </div>
+                <ul class="flex flex-row justify-between items-center content-center gap-28 pr-12">
+                    <li ><a href="#"> 
+                        <span class="material-symbols-outlined scale-150">
                             bar_chart_4_bars
                         </span>
-                        <span class="text-2xl">Dashboard</span>
+                        <span class="text-2xl ml-2">Dashboard</span>
                     </a></li>
                     <li><a href="#">
-                        <i class="fas fa-user scale-150 h-10 w-10"></i>
-                        <span class="text-2xl">Project</span>
+                        <i class="fas fa-user scale-150"></i>
+                        <span class="text-2xl ml-2">Project</span>
                     </a></li>
                     <li><a href="#">
-                        <i class="fa-solid fa-list-check scale-150 h-10 w-10"></i>
-                        <span class="text-2xl">My Task</span>
+                        <i class="fa-solid fa-list-check scale-150"></i>
+                        <span class="text-2xl ml-2">My Task</span>
                     </a></li>
                     <li><a href="#">
-                        <i class="fa-solid fa-phone scale-150 h-10 w-10"></i>
-                        <span class="text-2xl">Contact</span>
+                        <i class="fa-solid fa-phone scale-150 "></i>
+                        <span class="text-2xl ml-2">Contact</span>
                     </a></li>
                     </ul>
                 </ul>
             </nav>
+            <main class="container min-h-screen w-full h-5/6">
+                <div class="board w-full h-lvh overflow-scroll">
+                    <form id="todo-form pt-8 pb-9 px-0">
+                        <input type="text" class="p-3 mr-3 w-56 rounded-md border-none shadow-lg shadow-black/25 text-sm outline-none" placeholder="New TODO..." id="todo-input"/>
+                        <button class="px-8 py-3 rounded border-none shadow-lg shadow-black/25 bg-white text-black font-bold text-base cursor-pointer" type="submit">Add +</button>
+                    </form>
+
+                    <div class="lanes flex items-start justify-start gap-4 py-6 px-8 overflow-scroll h-full">
+                        <div class="swim-lane flex flex-col gap-3 bg-white shadow-lg shadow-black/25 p-3 rounded-md w-56 min-h-28 flex-shrink-0" id="todo-lane">
+                            <h3 class="heading text-xl font-bold mb-2">TODO</h3>
+
+                            <p class="task bg-white text-black shadow-lg shadow-black/25 p-3 rounded-md text-sm cursor-move" draggable="true">Get groceries</p>
+                            <p class="task bg-white text-black shadow-lg shadow-black/25 p-3 rounded-md text-sm cursor-move" draggable="true">Feed the dogs</p>
+                            <p class="task bg-white text-black shadow-lg shadow-black/25 p-3 rounded-md text-sm cursor-move" draggable="true">Mow the lawn</p>
+                        </div>
+
+                        <div class="swim-lane flex flex-col gap-3 bg-white shadow-lg shadow-black/25 p-3 rounded-md w-56 min-h-28 flex-shrink-0">
+                            <h3 class="heading text-xl font-bold mb-2">Doing</h3>
+
+                            <p class="task bg-white text-black shadow-lg shadow-black/25 p-3 rounded-md text-sm cursor-move" draggable="true">Binge 80 hours of Game of Thrones</p>
+                        </div>
+
+                        <div class="swim-lane flex flex-col gap-3 bg-white shadow-lg shadow-black/25 p-3 rounded-md w-56 min-h-28 flex-shrink-0" id="todo-lane">
+                            <h3 class="heading text-xl font-bold mb-2">Done</h3>
+
+                            <p class="task bg-white text-black shadow-lg shadow-black/25 p-3 rounded-md text-sm cursor-move" draggable="true">Watch a video of a man raising a grocery store lobster as a pet</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
         </div>
     </body>
 </html>
