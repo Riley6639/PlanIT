@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, intial-scale=1.0">
+    <meta name="viewport" content="width=device-width" , key="intial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
         integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
@@ -45,72 +45,85 @@
             </ul>
             </ul>
         </nav>
-        <div>
+        <div class="flex items-center">
             <label for="work">Work</label>
             <select name="work" id="work-list">
                 <option value="email">Reply/draft/follow up emails</option>
                 <option value="deadline">Upcoming deadlines</option>
                 <option value="networking">Attend events</option>
+                <option id="trigger-modal" value="add">add your own</option>
             </select>
 
             <label for="personal">Personal</label>
             <select name="personal" id="personal-list">
                 <option value="errands">Run Errands</option>
                 <option value="appointments">Doctors appointment</option>
+                <option id="trigger-modal" value="add">add your own</option>
             </select>
 
             <label for="family">Family</label>
             <select name="family" id="family-list">
                 <option value="events">Birthday</option>
                 <option value="activites">family games</option>
-                <option value="add">add your own</option>
+                <option id="trigger-modal" value="add">add your own</option>
             </select>
 
             <label for="home">Home</label>
             <select name="home" id="home-list">
                 <option value="cleaning">Clean</option>
                 <option value="shopping">Grocery shopping</option>
-                <option value="add">add your own</option>
+                <option id="trigger-modal" value="add">add your own</option>
             </select>
 
-            <label for="health"></label>
+            <label for="health">Health</label>
             <select name="health" id="health-list">
                 <option value="exercise">Exercise</option>
                 <option value="diet">Diet</option>
-                <option value="add">add your own</option>
+                <option id="trigger-modal" value="add">add your own</option>
             </select>
 
-            <label for="financial"></label>
+            <label for="financial">Financial</label>
             <select name="financial" id="financial-list">
                 <option value="budget">Budget</option>
                 <option value="savings">Savings</option>
-                <option value="add">add your own</option>
+                <option id="trigger-modal" value="add">add your own</option>
             </select>
 
-            <label for="learning"></label>
+            <label for="learning">Learning</label>
             <select name="learning" id="learning-list">
                 <option value="reading">Reading</option>
                 <option value="courses">Courses</option>
-                <option value="add">add your own</option>
+                <option id="trigger-modal" value="add">add your own</option>
             </select>
         </div>
-        <div class="calendar-container">
-            <table class="calendar">
-                <button id="change-view">change view</button>
-                <thead>
-                    <tr>
-                        <th>SUNDAY</th>
-                        <th>MONDAY</th>
-                        <th>TUESDAY</th>
-                        <th>WEDNESDAY</th>
-                        <th>THURSDAY</th>
-                        <th>FRIDAY</th>
-                        <th>SATURDAY</th>
-                    </tr>
-                </thead>
-            </table>
+        <div id="task-modal" class="modal">
+            <div class="modal-content">
+                <span class="close" id="close-modal">&times;</span>
+                <label for="add">Add you own task</label>
+                <input type="text" id="add" name="add" placeholder="Add your own task">
+            </div>
         </div>
+        <table class="flex justify-center items-center">
+            <section class="flex justify-around items-center">
+                <div>
+                    <h3>Tasks</h3>
+                    <ul id="task-list">
+                    </ul>
+                </div>
+                <div>
+                    <h3>Working on</h3>
+                    <ul id="work-list">
+                    </ul>
+                </div>
+                <div>
+                    <h3>Completed</h3>
+                    <ul id="completed">
+                    </ul>
+                </div>
+            </section>
+        </table>
     </div>
+    <script src="../script.js"></script>
 </body>
 
 </html>
