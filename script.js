@@ -1,16 +1,17 @@
-taskList = document.getElementById("task-list");
-workList = document.getElementById("work-list");
-completed = document.getElementById("completed");
-const select = document.getElementById("list");
+const taskList = document.getElementById("task-list");
+const workList = document.getElementById("work-list");
+const completed = document.getElementById("completed");
+const select = document.querySelector("select");
 const modal = document.getElementById("task-modal");
 const addOption = document.getElementById("#trigger-modal");
+const submit = document.getElementById("submitBtn");
 const closeModal = document.getElementById("close-modal");
-const newTask = document.getElementById("add")
+const modalTask = document.getElementById("modalInput");
+const deleteTask = document.getElementsByClassName("delete");
+const addBtn = document.getElementById("addBtn")
 
 // need to keep track of tasks and their positon
 let taskStorage = [];
-
-
 
 // needs to have logic to add new tasks
 function checkForCustomOption(selectElement) {
@@ -18,7 +19,7 @@ function checkForCustomOption(selectElement) {
     if (selectElement.value === "add") {
         modal.style.display = "block";
         // Prompt the user for a new option
-        const newOptionText = newTask.value;
+        const newOptionText = selectElement.value;
 
         if (newOptionText) {
             // Create a new option element
@@ -34,32 +35,66 @@ function checkForCustomOption(selectElement) {
             selectElement.value = selectElement.options[0].value;
         }
     }
-    closeModal.addEventListener("click", function () {
-        modal.style.display = "none";
-    });
 }
+
+closeModal.addEventListener("click", function () {
+    modal.style.display = "none";
+});
+
+submit.addEventListener("click", function () {
+    modal.style.display = "none";
+    // when submit is clicked the new task is added to the list
+    createTask(modalTask.value, taskList);
+});
+
+addBtn.addEventListener("click", function (event) {
+    event.preventDefault();
+    modal.style.display = "block";
+});
 
 // Call the checkForCustomOption function when the select element value is "add"
 document.querySelectorAll("#work-list, #personal-list, #family-list, #home-list, #health-list, #financial-list, #learning-list").forEach(function (selectElement) {
     selectElement.addEventListener("change", function (event) {
         event.preventDefault();
         checkForCustomOption(event.target);
-        createTask(event);
+        createTask(event.target.value, taskList);
     });
 });
 
+// needs to have logic to delete tasks
+Array.from(deleteTask).forEach(function (deleteButton) {
+    deleteButton.addEventListener("click", function () {
+        const taskItem = deleteButton.parentNode;
+        taskItem.parentNode.removeChild(taskItem);
+        const taskIndex = taskStorage.indexOf(taskItem.textContent.replace("Delete", "").trim());
+        if (taskIndex > -1) {
+            taskStorage.splice(taskIndex, 1);
+        }
+        console.log(taskStorage);
+    });
+});
 
-// Needs to create a task based on the option selected
-function createTask(event) {
-    const option = event.target;
-    const task = document.createElement("li");
-    task.textContent = option.value;
-    task.classList.add("task");
-    task.setAttribute("draggable", "true");
-    task.addEventListener("dragstart", dragStart);
-    task.addEventListener("dragend", dragEnd);
-    taskList.appendChild(task);
+// Needs to create a task based on the option selected or the custom option
+function createTask(task, listElement) {
+    const addTask = document.createElement("li");
+    const deleteTask = document.createElement("button");
+
+    addTask.textContent = task;
+    addTask.classList.add("task");
+    addTask.setAttribute("draggable", "true");
+    addTask.addEventListener("dragstart", dragStart);
+    addTask.addEventListener("dragend", dragEnd);
+
+    deleteTask.textContent = "Delete";
+    deleteTask.classList.add("delete");
+
+    addTask.appendChild(deleteTask);
+    listElement.appendChild(addTask);
+
+    taskStorage.push(task);
+    console.log(taskStorage);
 }
+
 
 // needs to have logic to move around the tasks
 // Create dragStart function to allow the task to be dragged
