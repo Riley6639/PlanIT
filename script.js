@@ -1,41 +1,59 @@
-const taskList = document.getElementById("task-list");
-const workList = document.getElementById("work-list");
-const completed = document.getElementById("completed");
+//variables for the list elements
+const todo = document.getElementById("task-list");
+const doing = document.getElementById("doing");
+const done = document.getElementById("completed");
+
+//variables for the modal
 const select = document.querySelector("select");
 const modal = document.getElementById("task-modal");
 const addOption = document.getElementById("#trigger-modal");
 const submit = document.getElementById("submitBtn");
 const closeModal = document.getElementById("close-modal");
 const modalTask = document.getElementById("modalInput");
+
+//variables for the add and delete buttons
 const deleteTask = document.getElementsByClassName("delete");
 const addBtn = document.getElementById("addBtn")
 
-// need to keep track of tasks and their positon
-let taskStorage = [];
+//variables for the created task elements
+const taskItem = document.getElementsByClassName("task-item");
 
-// needs to have logic to add new tasks
+// array for storing the tasks
+let taskStorage = [];
+//object for storing tasks
+let taskObject = {
+    task: "",
+    priority: "",
+    status: ""
+};
+
+// creates a task for the dropdown option selected
 function checkForCustomOption(selectElement) {
     // Check if the "Add your own" option is selected
     if (selectElement.value === "add") {
         modal.style.display = "block";
+        // the modal will add the option so this is not needed
         // Prompt the user for a new option
-        const newOptionText = selectElement.value;
+        // const newOptionText = selectElement.value;
 
-        if (newOptionText) {
-            // Create a new option element
-            const newOption = document.createElement("option");
-            newOption.text = newOptionText;
-            newOption.value = newOptionText.toLowerCase();
-            // Insert the new option before the "Add your own" option
-            selectElement.add(newOption, selectElement.options[selectElement.options.length - 1]);
-            // Set the newly added option as the selected one
-            selectElement.value = newOption.value;
-        } else {
-            // If the user cancels the prompt, revert the selection
-            selectElement.value = selectElement.options[0].value;
-        }
+        // if (newOptionText) {
+        //     // Create a new option element
+        //     const newOption = document.createElement("option");
+        //     newOption.text = newOptionText;
+        //     newOption.value = newOptionText.toLowerCase();
+        //     // Insert the new option before the "Add your own" option
+        //     selectElement.add(newOption, selectElement.options[selectElement.options.length - 1]);
+        //     // Set the newly added option as the selected one
+        //     selectElement.value = newOption.value;
+        // } else {
+        //     // If the user cancels the prompt, revert the selection
+        //     selectElement.value = selectElement.options[0].value;
+        // }
     }
 }
+
+// Load tasks from local storage
+loadTasksFromLocalStorage();
 
 closeModal.addEventListener("click", function () {
     modal.style.display = "none";
@@ -44,7 +62,7 @@ closeModal.addEventListener("click", function () {
 submit.addEventListener("click", function () {
     modal.style.display = "none";
     // when submit is clicked the new task is added to the list
-    createTask(modalTask.value, taskList);
+    createTask(modalTask.value, todo);
 });
 
 addBtn.addEventListener("click", function (event) {
@@ -57,87 +75,181 @@ document.querySelectorAll("#work-list, #personal-list, #family-list, #home-list,
     selectElement.addEventListener("change", function (event) {
         event.preventDefault();
         checkForCustomOption(event.target);
-        createTask(event.target.value, taskList);
+        createTask(event.target.value, todo);
     });
 });
 
-// needs to have logic to delete tasks
-Array.from(deleteTask).forEach(function (deleteButton) {
-    deleteButton.addEventListener("click", function () {
-        const taskItem = deleteButton.parentNode;
-        taskItem.parentNode.removeChild(taskItem);
-        const taskIndex = taskStorage.indexOf(taskItem.textContent.replace("Delete", "").trim());
-        if (taskIndex > -1) {
-            taskStorage.splice(taskIndex, 1);
-        }
-        console.log(taskStorage);
+// unecessary code. the addDeleteFunctionality function is called in the createTask function
+// Array.from(deleteTask).forEach(function (deleteButton) {
+//     deleteButton.addEventListener("click", function () {
+//         const taskItem = deleteButton.parentNode;
+//         taskItem.parentNode.removeChild(taskItem);
+//         const taskIndex = taskStorage.indexOf(taskItem.textContent.replace("Delete", "").trim());
+//         if (taskIndex > -1) {
+//             taskStorage.splice(taskIndex, 1);
+//         }
+//         console.log(taskStorage);
+//     });
+// });
+//function to create the dropdown elements
+function createDropdown(options, id) {
+    const dropdown = document.createElement("select");
+    dropdown.id = id;
+    options.forEach(option => {
+        const opt = document.createElement("option");
+        opt.value = option.value;
+        opt.textContent = option.text;
+        dropdown.appendChild(opt);
     });
-});
+    return dropdown;
+}
 
 // Needs to create a task based on the option selected or the custom option
 function createTask(task, listElement) {
+    //create the task and delete button elements
     const addTask = document.createElement("li");
     const deleteTask = document.createElement("button");
 
-    addTask.textContent = task;
-    addTask.classList.add("task");
-    addTask.setAttribute("draggable", "true");
-    addTask.addEventListener("dragstart", dragStart);
-    addTask.addEventListener("dragend", dragEnd);
+    //create priority dropdown element
+    const priorityOptions = [
+        { value: "high", text: "High" },
+        { value: "medium", text: "Medium" },
+        { value: "low", text: "Low" }
+    ]
+    const priority = createDropdown(priorityOptions, "priority-list");
 
-    deleteTask.textContent = "Delete";
+    //create status dropdown elements
+    const statusOptions = [
+        { value: "todo", text: "To Do" },
+        { value: "doing", text: "Doing" },
+        { value: "done", text: "Done" }
+    ]
+    const status = createDropdown(statusOptions, "status");
+
+    //configure the delete button
+    deleteTask.textContent = "❌";
     deleteTask.classList.add("delete");
+    // addDeleteFunctionality(deleteTask);
 
+    //configure the task element
+    addTask.textContent = task;
+    addTask.classList.add("task-item");
+    addTask.appendChild(status);
+    addTask.appendChild(priority);
     addTask.appendChild(deleteTask);
     listElement.appendChild(addTask);
 
-    taskStorage.push(task);
+    addTask.priority = priority;
+    addTask.status = status;
+
+    //push the addtask properties to taskObject
+    taskObject = {
+        task: task,
+        priority: priority.value,
+        status: status.value
+    };
+    taskStorage.push(taskObject);
     console.log(taskStorage);
+
+    //save task to local storage
+    saveTasksToLocalStorage();
+
+    // handle priority and status
+    handlePriority(addTask);
+    handleStatus(addTask);
+
+
+    // Add event listener to the delete button
+    deleteTask.addEventListener("click", function () {
+        const taskItem = deleteTask.parentNode;
+        taskItem.parentNode.removeChild(taskItem);
+        // remove the task from the storage array
+        taskStorage.splice(taskStorage.indexOf(taskObject.task), 1);
+        saveTasksToLocalStorage();
+        console.log(taskStorage);
+    });
 }
 
 
-// needs to have logic to move around the tasks
-// Create dragStart function to allow the task to be dragged
-function dragStart(event) {
-    event.dataTransfer.setData("text/plain", event.target.textContent);
-}
-
-// Create dragEnd function to handle the end of dragging
-function dragEnd(event) {
-    // append element to the list it was dropped on
-    const task = document.createElement("li");
-    if (event.target.id === "work-list") {
-        task.textContent = event.dataTransfer.getData("text/plain");
-        task.classList.add("task");
-        task.setAttribute("draggable", "true");
-        task.addEventListener("dragstart", dragStart);
-        task.addEventListener("dragend", dragEnd);
-        workList.appendChild(task);
-    } else if (event.target.id === "completed") {
-        task.textContent = event.dataTransfer.getData("text/plain");
-        task.classList.add("task");
-        task.setAttribute("draggable", "true");
-        task.addEventListener("dragstart", dragStart);
-        task.addEventListener("dragend", dragEnd);
-        completed.appendChild(task);
-    }
-    // Handle any necessary cleanup or actions after dragging ends
-    event.dataTransfer.clearData();
-}
-
-
-
-
-// needs to have logic to display day/week/month
+// no longer necessary
+// function to delete the task
+// function addDeleteFunctionality(deleteButton) {
+//     deleteButton.addEventListener("click", function () {
+//         const taskItem = deleteButton.parentNode;
+//         taskItem.parentNode.removeChild(taskItem);
+//         const taskIndex = taskStorage.indexOf(taskItem.textContent.replace("Delete", "").trim());
+//         if (taskIndex > -1) {
+//             taskStorage.splice(taskIndex, 1);
+//         }
+//         console.log(taskStorage);
+//     });
+// }
 
 // needs to have logic to store the user's tasks to local storage
+function saveTasksToLocalStorage() {
+    localStorage.setItem('tasks', JSON.stringify(taskStorage));
+}
+
+function loadTasksFromLocalStorage() {
+    const storedTasks = JSON.parse(localStorage.getItem('tasks'));
+    if (!storedTasks) {
+        return;
+    }
+
+    storedTasks.forEach(function (task) {
+        let listElement;
+        if (task.status === "todo") {
+            listElement = todo;
+        } else if (task.status === "doing") {
+            listElement = doing;
+        } else if (task.status === "done") {
+            listElement = done;
+        }
+        createTask(task.task, listElement);
+
+    });
+}
 
 // needs to have logic to set the priority of the task
+function handlePriority(taskItem) {
+    taskItem.priority.addEventListener("change", function () {
+        if (taskItem.priority.value === "high") {
+            taskItem.style.backgroundColor = "red";
+        } else if (taskItem.priority.value === "medium") {
+            taskItem.style.backgroundColor = "yellow";
+        } else if (taskItem.priority.value === "low") {
+            taskItem.style.backgroundColor = "green";
+        }
+        // update the taskObject with the new priority
+        taskObject = {
+            task: taskItem.text,
+            priority: taskItem.priority.value,
+            status: taskItem.status.value
+        };
+        taskStorage.push(taskObject);
+        // update the taskStorage with the new taskObject
+        saveTasksToLocalStorage();
+    });
+}
 
-// -needs to have logic to move around the tasks
-
-// -needs to have logic to display day/week/month
-
-// -needs to have logic to store the user's tasks to local storage
-
-// -needs to have logic to set the priority of the task
+// when the priortiy is changed the task moves to the appropriate list
+function handleStatus(taskItem) {
+    taskItem.status.addEventListener("change", function () {
+        if (taskItem.status.value === "todo") {
+            todo.appendChild(taskItem);
+        } else if (taskItem.status.value === "doing") {
+            doing.appendChild(taskItem);
+        } else if (taskItem.status.value === "done") {
+            done.appendChild(taskItem);
+        }
+        // update the taskObject with the new status
+        taskObject = {
+            task: taskItem.text,
+            priority: taskItem.priority.value,
+            status: taskItem.status.value
+        };
+        taskStorage.push(taskObject);
+        // update the taskStorage with the new taskObject
+        saveTasksToLocalStorage();
+    });
+}
