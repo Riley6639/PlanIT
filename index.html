@@ -18,7 +18,7 @@
     <div class="dashboard px-4 py-0 my-0 mx-auto h-screen border-2 border-black">
         <nav class="navigation flex justify-evenly w-full mt-2 border-2 rounded-2xl border-black">
             <div class="logo flex flex-row items-center w-1/4 relative right-20">
-                <img src="assets/Untitled design.png" class="h-16 w-16 ml-2" alt="Company Logo">
+                <img src="Untitled design.png" class="h-16 w-16 ml-2" alt="Company Logo">
                 <span class="font-bold text-4xl"> PlanIT</span>
             </div>
             <ul class="flex flex-row justify-between items-center content-center gap-28 pr-12">
@@ -69,7 +69,9 @@
 
                         <!-- <p class="task bg-white text-black shadow-lg shadow-black/25 p-3 rounded-md text-sm cursor-move"
                             draggable="true">Binge 80 hours of Game of Thrones</p> -->
-                        <ul id="working-list">
+                        <ul id="doing"
+                            class="task bg-white text-black shadow-lg shadow-black/25 p-3 rounded-md text-sm cursor-move">
+                        </ul>
                         </ul>
 
                     </div>
@@ -80,7 +82,9 @@
 
                         <!-- <p class="task bg-white text-black shadow-lg shadow-black/25 p-3 rounded-md text-sm cursor-move"
                             draggable="true">Watch a video of a man raising a grocery store lobster as a pet</p> -->
-                        <ul id="completed">
+                        <ul id="completed"
+                            class="task bg-white text-black shadow-lg shadow-black/25 p-3 rounded-md text-sm cursor-move">
+                        </ul>
                         </ul>
                     </div>
                 </div>
@@ -143,33 +147,25 @@
                 <div class="modal-content">
                     <span class="close" id="close-modal">&times;</span>
                     <label for="add">Add you own task</label>
-                    <input type="text" id="modalInput" name="add" placeholder="Add your own task">
+                    <input type="text" id="modal-input" name="add" placeholder="Add your own task">
+                    <label for="priority">Set the Priority</label>
+                    <select name="priority" id="priority-list">
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                    <label for="status">Set the status</label>
+                    <select name="status" id="status">
+                        <option value="todo">To Do</option>
+                        <option value="doing">Doing</option>
+                        <option value="completed">Completed</option>
+                    </select>
                     <button id="submitBtn">Submit</button>
                 </div>
             </div>
         </main>
 
-        <table class="flex justify-center items-center">
-            <section class="flex justify-around items-center">
-                <!-- <div>
-                    <h3>Tasks</h3>
-                    <ul id="task-list">
-                    </ul>
-                </div> -->
-                <!-- <div>
-                    <h3>Working on</h3>
-                    <ul id="working-list">
-                    </ul>
-                </div> -->
-                <!-- <div>
-                    <h3>Completed</h3>
-                    <ul id="completed">
-                    </ul>
-                </div> -->
-            </section>
-        </table>
-    </div>
-    <script src="script.js"></script>
+        <script src="script.js"></script>
 </body>
 
 </html>
